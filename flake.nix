@@ -92,6 +92,11 @@
                     type = lib.types.str;
                     description = "Git repository URL";
                   };
+                  branch = mkOption {
+                    type = types.str;
+                    default = "master";
+                    description = "Git branch to track";
+                  };
                   wwwRedirect = lib.mkOption {
                     type = lib.types.bool;
                     default = false;
