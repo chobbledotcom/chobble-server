@@ -230,6 +230,7 @@
                 AllowAgentForwarding no
                 AllowStreamLocalForwarding no
                 AuthenticationMethods publickey
+                AddressFamily inet
               '';
             };
 
