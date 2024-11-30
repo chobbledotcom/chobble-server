@@ -92,8 +92,8 @@
                     type = lib.types.str;
                     description = "Git repository URL";
                   };
-                  branch = mkOption {
-                    type = types.str;
+                  branch = lib.mkOption {
+                    type = lib.types.str;
                     default = "master";
                     description = "Git branch to track";
                   };
