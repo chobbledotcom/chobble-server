@@ -12,23 +12,18 @@ in {
             description = "API key for this analytics domain";
           };
           targets = lib.mkOption {
-            type = lib.types.listOf (lib.types.submodule {
-              options = {
-                domain = lib.mkOption {
-                  type = lib.types.str;
-                  description = "Domain to track (e.g., example.com)";
-                };
-                logPath = lib.mkOption {
-                  type = lib.types.str;
-                  description = "Base path where logs for this domain are stored";
-                };
-              };
-            });
-            description = "List of domains to track and their log locations";
+            type = lib.types.listOf lib.types.str;  # Now just an array of domain strings
+            description = "List of domains to track";
           };
         };
       });
       default = {};
+      example = {
+        "analytics.example.com" = {
+          apiKey = "abc123";
+          targets = [ "example.com" "blog.example.com" ];
+        };
+      };
       description = "Configuration for analytics domains and their targets";
     };
   };
@@ -45,10 +40,10 @@ in {
 
     systemd.services = lib.mkMerge [
       (lib.mapAttrs' (analyticsHost: hostConfig:
-        lib.foldl' (acc: target:
+        lib.foldl' (acc: domain:
           lib.recursiveUpdate acc {
-            "goatcounter-import-${shortHash target.domain}" = {
-              description = "Goatcounter log import for ${target.domain}";
+            "goatcounter-import-${shortHash domain}" = {
+              description = "Goatcounter log import for ${domain}";
               after = [ "network-online.target" "caddy.service" ];
               wantedBy = [ "multi-user.target" ];
               serviceConfig = {
@@ -61,9 +56,11 @@ in {
                     -follow \
                     -format=combined \
                     -site="https://${analyticsHost}" \
+                    -exclude 'path:glob:/assets/*' \
                     -exclude 'status:404' \
                     -exclude redirect \
-                    ${target.logPath}/access.log
+                    -exclude 'path:glob:/img/*' \
+                    /var/log/caddy/access-${domain}.log
                 '';
               };
             };
