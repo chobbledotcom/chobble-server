@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.services.chobble-server;  # Changed to use chobble-server config
+  cfg = config.services.chobble-server;
 in {
-  options.services.chobble-server = {  # Changed namespace
+  options.services.chobble-server = {
     analyticsHosts = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options = {
