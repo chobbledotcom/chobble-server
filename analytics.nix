@@ -45,6 +45,7 @@ in {
             "goatcounter-import-${shortHash domain}" = {
               description = "Goatcounter log import for ${domain}";
               after = [ "network-online.target" "caddy.service" ];
+              wants = [ "network-online.target" ];
               wantedBy = [ "multi-user.target" ];
               serviceConfig = {
                 User = "caddy";
