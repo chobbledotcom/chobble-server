@@ -169,17 +169,13 @@
               virtualHosts."git.${cfg.baseDomain}" = {
                 listenAddresses = ["0.0.0.0"];
                 extraConfig = ''
-                  reverse_proxy :3000 {
-                    header_up Host 127.0.0.1
-                  }
+                  reverse_proxy :3000
                 '';
               };
               virtualHosts."analytics.${cfg.baseDomain}" = {
                 listenAddresses = ["0.0.0.0"];
                 extraConfig = ''
-                  reverse_proxy :8081 {
-                    header_up Host 127.0.0.1
-                  }
+                  reverse_proxy :8081
                 '';
               };
             };
