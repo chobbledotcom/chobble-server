@@ -201,9 +201,7 @@
 
             services.goatcounter = {
               enable = true;
-              extraArgs = [
-                "-tls=none"
-              ];
+              proxy = true;
             };
 
             services.site-builder = {
