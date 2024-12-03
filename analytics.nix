@@ -61,10 +61,8 @@ in {
                     -follow \
                     -format=combined \
                     -site="https://${analyticsHost}" \
-                    -exclude 'path:glob:/assets/*' \
                     -exclude 'status:404' \
                     -exclude redirect \
-                    -exclude 'path:glob:/img/*' \
                     ${target.logPath}/access.log
                 '';
               };
