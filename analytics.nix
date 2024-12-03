@@ -39,32 +39,30 @@ in {
     ];
 
     systemd.services = lib.mkMerge [
-      (lib.mapAttrs' (analyticsHost: hostConfig:
-        lib.nameValuePair "systemd.services" (
-          lib.foldl' (acc: domain:
-            lib.recursiveUpdate acc {
-              "goatcounter-import-${shortHash domain}" = {
-                description = "Goatcounter log import for ${domain}";
-                after = [ "network-online.target" "caddy.service" ];
-                wantedBy = [ "multi-user.target" ];
-                serviceConfig = {
-                  User = "caddy";
-                  Group = "caddy";
-                  Environment = "GOATCOUNTER_API_KEY=${hostConfig.apiKey}";
-                  ExecStart = ''
-                    ${pkgs.goatcounter}/bin/goatcounter \
-                      import \
-                      -follow \
-                      -format=combined \
-                      -site="https://${analyticsHost}" \
-                      -exclude 'status:404' \
-                      /var/log/caddy/access-${domain}.log
-                  '';
-                };
+      (lib.concatMapAttrs (analyticsHost: hostConfig:
+        lib.foldl' (acc: domain:
+          lib.recursiveUpdate acc {
+            "goatcounter-import-${shortHash domain}" = {
+              description = "Goatcounter log import for ${domain}";
+              after = [ "network-online.target" "caddy.service" ];
+              wantedBy = [ "multi-user.target" ];
+              serviceConfig = {
+                User = "caddy";
+                Group = "caddy";
+                Environment = "GOATCOUNTER_API_KEY=${hostConfig.apiKey}";
+                ExecStart = ''
+                  ${pkgs.goatcounter}/bin/goatcounter \
+                    import \
+                    -follow \
+                    -format=combined \
+                    -site="https://${analyticsHost}" \
+                    -exclude 'status:404' \
+                    /var/log/caddy/access-${domain}.log
+                '';
               };
-            }
-          ) {} hostConfig.targets
-        )
+            };
+          }
+        ) {} hostConfig.targets
       ) cfg.analyticsHosts)
     ];
   };
