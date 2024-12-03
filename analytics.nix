@@ -37,9 +37,10 @@ in {
         '';
       }) cfg.analyticsHosts)
     ];
+
     systemd.services = lib.mkMerge [
       (lib.mapAttrs' (analyticsHost: hostConfig:
-        lib.nameValuePair analyticsHost (
+        lib.nameValuePair "systemd.services" (
           lib.foldl' (acc: domain:
             lib.recursiveUpdate acc {
               "goatcounter-import-${shortHash domain}" = {
