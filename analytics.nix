@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.services.chobble-server;
+  shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
 in {
   options.services.chobble-server = {
     analyticsHosts = lib.mkOption {
@@ -19,7 +20,6 @@ in {
                 };
                 logPath = lib.mkOption {
                   type = lib.types.str;
-                  default = "/var/www/";
                   description = "Base path where logs for this domain are stored";
                 };
               };
@@ -47,7 +47,7 @@ in {
       (lib.mapAttrs' (analyticsHost: hostConfig:
         lib.foldl' (acc: target:
           lib.recursiveUpdate acc {
-            "goatcounter-import-${lib.replaceStrings ["."] ["-"] target.domain}" = {
+            "goatcounter-import-${shortHash target.domain}" = {
               description = "Goatcounter log import for ${target.domain}";
               after = [ "network-online.target" "caddy.service" ];
               wantedBy = [ "multi-user.target" ];
