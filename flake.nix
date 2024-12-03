@@ -199,7 +199,12 @@
               };
             };
 
-            services.goatcounter.enable = true;
+            services.goatcounter = {
+              enable = true;
+              extraArgs = [
+                "-tls=none"
+              ];
+            };
 
             services.site-builder = {
               enable = true;
