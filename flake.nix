@@ -23,6 +23,8 @@
           "forgejo"
           # Web server/reverse proxy
           "caddy"
+          # Analytics
+          "goatcounter"
           # Test service that always fails (for monitoring testing)
           "always-fails"
         ];
@@ -172,6 +174,14 @@
                   }
                 '';
               };
+              virtualHosts."analytics.${cfg.baseDomain}" = {
+                listenAddresses = ["0.0.0.0"];
+                extraConfig = ''
+                  reverse_proxy :8081 {
+                    header_up Host 127.0.0.1
+                  }
+                '';
+              };
             };
 
             services.forgejo = {
@@ -188,6 +198,8 @@
                 actions.ENABLED = false;
               };
             };
+
+            services.goatcounter.enable = true;
 
             services.site-builder = {
               enable = true;
