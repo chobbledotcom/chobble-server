@@ -124,6 +124,15 @@
               default = {};
               description = "Static sites configuration";
             };
+
+            analyticsHosts = lib.mkOption {
+              type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+              default = {};
+              example = {
+                "analytics.example.com" = [ "example.com" "blog.example.com" ];
+              };
+              description = "Mapping of analytics domains to their target sites";
+            };
           };
 
           config = lib.mkIf cfg.enable {
@@ -166,18 +175,22 @@
 
             services.caddy = {
               enable = true;
-              virtualHosts."git.${cfg.baseDomain}" = {
-                listenAddresses = ["0.0.0.0"];
-                extraConfig = ''
-                  reverse_proxy :3000
-                '';
-              };
-              virtualHosts."analytics.${cfg.baseDomain}" = {
-                listenAddresses = ["0.0.0.0"];
-                extraConfig = ''
-                  reverse_proxy :8081
-                '';
-              };
+              virtualHosts = lib.mkMerge [
+                {
+                  "git.${cfg.baseDomain}" = {
+                    listenAddresses = ["0.0.0.0"];
+                    extraConfig = ''
+                      reverse_proxy :3000
+                    '';
+                  };
+                }
+                (builtins.mapAttrs (host: _: {
+                  listenAddresses = ["0.0.0.0"];
+                  extraConfig = ''
+                    reverse_proxy :8081
+                  '';
+                }) cfg.analyticsHosts)
+              ];
             };
 
             services.forgejo = {
