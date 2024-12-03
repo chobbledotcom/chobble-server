@@ -60,6 +60,10 @@
         monitoringConfigs = builtins.listToAttrs (map monitorConfig monitoredServices);
 
         in {
+          imports = [
+            ./analytics.nix  # Import the analytics module here
+          ];
+
           options.services.chobble-server = {
             enable = lib.mkEnableOption "Chobble server configuration";
 
@@ -124,15 +128,6 @@
               default = {};
               description = "Static sites configuration";
             };
-
-            analyticsHosts = lib.mkOption {
-              type = lib.types.attrsOf (lib.types.listOf lib.types.str);
-              default = {};
-              example = {
-                "analytics.example.com" = [ "example.com" "blog.example.com" ];
-              };
-              description = "Mapping of analytics domains to their target sites";
-            };
           };
 
           config = lib.mkIf cfg.enable {
@@ -175,22 +170,14 @@
 
             services.caddy = {
               enable = true;
-              virtualHosts = lib.mkMerge [
-                {
-                  "git.${cfg.baseDomain}" = {
-                    listenAddresses = ["0.0.0.0"];
-                    extraConfig = ''
-                      reverse_proxy :3000
-                    '';
-                  };
-                }
-                (builtins.mapAttrs (host: _: {
+              virtualHosts = {
+                "git.${cfg.baseDomain}" = {
                   listenAddresses = ["0.0.0.0"];
                   extraConfig = ''
-                    reverse_proxy :8081
+                    reverse_proxy :3000
                   '';
-                }) cfg.analyticsHosts)
-              ];
+                };
+              };
             };
 
             services.forgejo = {
