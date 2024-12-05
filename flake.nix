@@ -99,7 +99,7 @@
                   };
                   branch = lib.mkOption {
                     type = lib.types.str;
-                    default = "master";
+                    default = "main";
                     description = "Git branch to track";
                   };
                   wwwRedirect = lib.mkOption {
