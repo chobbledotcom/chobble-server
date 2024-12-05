@@ -186,6 +186,9 @@
               enable = true;
               settings = {
                 ui.DEFAULT_THEME = "forgejo-dark";
+                DEFAULT = {
+                  APP_NAME = "git.${cfg.baseDomain}";
+                };
                 server = {
                   DOMAIN = "git.${cfg.baseDomain}";
                   ROOT_URL = "https://git.${cfg.baseDomain}/";
