@@ -13,6 +13,7 @@
   outputs = { self, nixpkgs, site-builder }:
     let
       lib = nixpkgs.lib;
+      shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
     in {
       nixosModules.default = { config, pkgs, ... }:
         let cfg = config.services.chobble-server;
@@ -31,12 +32,10 @@
 
         # Get list of site builder services from the site-builder configuration.
         # Only included if site-builder is enabled.
-        # Converts domains like "example.com" into service names like
-        # "example-com-builder"
         siteBuilderServices = lib.optionals
           config.services.site-builder.enable
           (map
-            (domain: "${lib.replaceStrings ["."] ["-"] domain}-builder")
+            (domain: shortHash domain)
             (builtins.attrNames config.services.site-builder.sites)
           );
 
