@@ -35,7 +35,7 @@
         siteBuilderServices = lib.optionals
           config.services.site-builder.enable
           (map
-            (domain: shortHash domain)
+            (domain: "site-${shortHash domain}-builder")
             (builtins.attrNames config.services.site-builder.sites)
           );
 
