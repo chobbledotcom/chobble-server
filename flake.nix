@@ -13,54 +13,54 @@
   outputs = { self, nixpkgs, site-builder }:
     let
       lib = nixpkgs.lib;
-      shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
+      shortHash = str:
+        builtins.substring 0 8 (builtins.hashString "sha256" str);
     in {
       nixosModules.default = { config, pkgs, ... }:
-        let cfg = config.services.chobble-server;
+        let
+          cfg = config.services.chobble-server;
 
-        # These core services will always be monitored for failures
-        baseServices = [
-          # Git hosting service
-          "forgejo"
-          # Web server/reverse proxy
-          "caddy"
-          # Analytics
-          "goatcounter"
-          # Test service that always fails (for monitoring testing)
-          "always-fails"
-        ];
+          # These core services will always be monitored for failures
+          baseServices = [
+            # Git hosting service
+            "forgejo"
+            # Web server/reverse proxy
+            "caddy"
+            # Analytics
+            "goatcounter"
+            # Test service that always fails (for monitoring testing)
+            "always-fails"
+          ];
 
-        # Get list of site builder services from the site-builder configuration.
-        # Only included if site-builder is enabled.
-        siteBuilderServices = lib.optionals
-          config.services.site-builder.enable
-          (map
-            (domain: "site-${shortHash domain}-builder")
-            (builtins.attrNames config.services.site-builder.sites)
-          );
+          # Get list of site builder services from the site-builder configuration.
+          # Only included if site-builder is enabled.
+          siteBuilderServices =
+            lib.optionals config.services.site-builder.enable
+            (map (domain: "site-${shortHash domain}-builder")
+              (builtins.attrNames config.services.site-builder.sites));
 
-        # Complete list of all services that should be monitored
-        monitoredServices = baseServices ++ siteBuilderServices;
+          # Complete list of all services that should be monitored
+          monitoredServices = baseServices ++ siteBuilderServices;
 
-        # Creates a monitoring configuration for a single service
-        # Input: service name (like "forgejo")
-        # Output: configuration that adds failure monitoring to that service
-        monitorConfig = name: lib.nameValuePair
-          name
-          {
-            unitConfig.OnFailure = [
-              # %n is replaced with the service name by systemd
-              "notify-failure@%n"
-            ];
-          };
+          # Creates a monitoring configuration for a single service
+          # Input: service name (like "forgejo")
+          # Output: configuration that adds failure monitoring to that service
+          monitorConfig = name:
+            lib.nameValuePair name {
+              unitConfig.OnFailure = [
+                # %n is replaced with the service name by systemd
+                "notify-failure@%n"
+              ];
+            };
 
-        # Convert our list of services into a systemd-compatible attribute set
-        # This adds failure monitoring to each service in monitoredServices
-        monitoringConfigs = builtins.listToAttrs (map monitorConfig monitoredServices);
+          # Convert our list of services into a systemd-compatible attribute set
+          # This adds failure monitoring to each service in monitoredServices
+          monitoringConfigs =
+            builtins.listToAttrs (map monitorConfig monitoredServices);
 
         in {
           imports = [
-            ./analytics.nix  # Import the analytics module here
+            ./analytics.nix # Import the analytics module here
           ];
 
           options.services.chobble-server = {
@@ -117,14 +117,20 @@
                     default = "caddy";
                     description = "Hosting service to use (caddy or neocities)";
                   };
+                  builder = lib.mkOption {
+                    type = lib.types.enum [ "nix" "jekyll" ];
+                    default = "nix";
+                    description = "Builder to use (nix or jekyll)";
+                  };
                   apiKey = lib.mkOption {
                     type = lib.types.nullOr lib.types.str;
                     default = null;
-                    description = "API key for the hosting service (if required)";
+                    description =
+                      "API key for the hosting service (if required)";
                   };
                 };
               });
-              default = {};
+              default = { };
               description = "Static sites configuration";
             };
           };
@@ -171,23 +177,20 @@
               enable = true;
               virtualHosts = {
                 "git.${cfg.baseDomain}" = {
-                  listenAddresses = ["0.0.0.0"];
+                  listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
                     reverse_proxy :3000
                   '';
                 };
               };
-              extraConfig = ''
-              '';
+              extraConfig = "";
             };
 
             services.forgejo = {
               enable = true;
               settings = {
                 ui.DEFAULT_THEME = "forgejo-dark";
-                DEFAULT = {
-                  APP_NAME = "git.${cfg.baseDomain}";
-                };
+                DEFAULT = { APP_NAME = "git.${cfg.baseDomain}"; };
                 server = {
                   DOMAIN = "git.${cfg.baseDomain}";
                   ROOT_URL = "https://git.${cfg.baseDomain}/";
@@ -217,13 +220,14 @@
                   description = "Failure notification for %i";
                   scriptArgs = "%i"; # Pass the service name as an argument
                   # Send notification via ntfy.sh when a service fails
-                  script = ''${pkgs.curl}/bin/curl \
-                    --fail \
-                    --show-error --silent \
-                    --max-time 10 \
-                    --retry 3 \
-                    --data "${config.networking.hostName} service '$1' exited with errors" \
-                    ${cfg.ntfyAddress}'';
+                  script = ''
+                    ${pkgs.curl}/bin/curl \
+                                        --fail \
+                                        --show-error --silent \
+                                        --max-time 10 \
+                                        --retry 3 \
+                                        --data "${config.networking.hostName} service '$1' exited with errors" \
+                                        ${cfg.ntfyAddress}'';
                 };
 
                 # Test service that always fails (for testing)
@@ -255,7 +259,7 @@
             };
 
             # Remove default packages
-            environment.defaultPackages = [];
+            environment.defaultPackages = [ ];
 
             system.stateVersion = "23.05";
           };
@@ -285,15 +289,15 @@
               myAddress = "127.0.0.1";
               sites = {
                 "example.com" = {
-                    gitRepo = "http://localhost:3000/example/site";
-                    wwwRedirect = true;
-                  };
-                  "example.neocities.org" = {
-                    gitRepo = "https://example.com/organisation/site";
-                    wwwRedirect = false;
-                    host = "neocities";
-                    apiKey = "aaaaaaaaaaaaaa";
-                  };
+                  gitRepo = "http://localhost:3000/example/site";
+                  wwwRedirect = true;
+                };
+                "example.neocities.org" = {
+                  gitRepo = "https://example.com/organisation/site";
+                  wwwRedirect = false;
+                  host = "neocities";
+                  apiKey = "aaaaaaaaaaaaaa";
+                };
               };
             };
           })
