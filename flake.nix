@@ -10,13 +10,19 @@
     };
   };
 
-  outputs = { self, nixpkgs, site-builder }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      site-builder,
+    }:
     let
       lib = nixpkgs.lib;
-      shortHash = str:
-        builtins.substring 0 8 (builtins.hashString "sha256" str);
-    in {
-      nixosModules.default = { config, pkgs, ... }:
+      shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
+    in
+    {
+      nixosModules.default =
+        { config, pkgs, ... }:
         let
           cfg = config.services.chobble-server;
 
@@ -34,10 +40,11 @@
 
           # Get list of site builder services from the site-builder configuration.
           # Only included if site-builder is enabled.
-          siteBuilderServices =
-            lib.optionals config.services.site-builder.enable
-            (map (domain: "site-${shortHash domain}-builder")
-              (builtins.attrNames config.services.site-builder.sites));
+          siteBuilderServices = lib.optionals config.services.site-builder.enable (
+            map (domain: "site-${shortHash domain}-builder") (
+              builtins.attrNames config.services.site-builder.sites
+            )
+          );
 
           # Complete list of all services that should be monitored
           monitoredServices = baseServices ++ siteBuilderServices;
@@ -45,7 +52,8 @@
           # Creates a monitoring configuration for a single service
           # Input: service name (like "forgejo")
           # Output: configuration that adds failure monitoring to that service
-          monitorConfig = name:
+          monitorConfig =
+            name:
             lib.nameValuePair name {
               unitConfig.OnFailure = [
                 # %n is replaced with the service name by systemd
@@ -55,10 +63,10 @@
 
           # Convert our list of services into a systemd-compatible attribute set
           # This adds failure monitoring to each service in monitoredServices
-          monitoringConfigs =
-            builtins.listToAttrs (map monitorConfig monitoredServices);
+          monitoringConfigs = builtins.listToAttrs (map monitorConfig monitoredServices);
 
-        in {
+        in
+        {
           imports = [
             ./analytics.nix # Import the analytics module here
           ];
@@ -70,12 +78,6 @@
               type = lib.types.str;
               example = "chobble.com";
               description = "Base domain for services";
-            };
-
-            ntfyAddress = lib.mkOption {
-              type = lib.types.str;
-              example = "your_ntfy_address";
-              description = "ntfy address for failure notifications";
             };
 
             hostname = lib.mkOption {
@@ -91,45 +93,52 @@
             };
 
             sites = lib.mkOption {
-              type = lib.types.attrsOf (lib.types.submodule {
-                options = {
-                  gitRepo = lib.mkOption {
-                    type = lib.types.str;
-                    description = "Git repository URL";
+              type = lib.types.attrsOf (
+                lib.types.submodule {
+                  options = {
+                    gitRepo = lib.mkOption {
+                      type = lib.types.str;
+                      description = "Git repository URL";
+                    };
+                    branch = lib.mkOption {
+                      type = lib.types.str;
+                      default = "main";
+                      description = "Git branch to track";
+                    };
+                    wwwRedirect = lib.mkOption {
+                      type = lib.types.bool;
+                      default = false;
+                      description = "Whether to redirect www subdomain";
+                    };
+                    useHTTPS = lib.mkOption {
+                      type = lib.types.bool;
+                      default = true;
+                      description = "Whether to use HTTPS for this site";
+                    };
+                    host = lib.mkOption {
+                      type = lib.types.enum [
+                        "caddy"
+                        "neocities"
+                      ];
+                      default = "caddy";
+                      description = "Hosting service to use (caddy or neocities)";
+                    };
+                    builder = lib.mkOption {
+                      type = lib.types.enum [
+                        "nix"
+                        "jekyll"
+                      ];
+                      default = "nix";
+                      description = "Builder to use (nix or jekyll)";
+                    };
+                    apiKey = lib.mkOption {
+                      type = lib.types.nullOr lib.types.str;
+                      default = null;
+                      description = "API key for the hosting service (if required)";
+                    };
                   };
-                  branch = lib.mkOption {
-                    type = lib.types.str;
-                    default = "main";
-                    description = "Git branch to track";
-                  };
-                  wwwRedirect = lib.mkOption {
-                    type = lib.types.bool;
-                    default = false;
-                    description = "Whether to redirect www subdomain";
-                  };
-                  useHTTPS = lib.mkOption {
-                    type = lib.types.bool;
-                    default = true;
-                    description = "Whether to use HTTPS for this site";
-                  };
-                  host = lib.mkOption {
-                    type = lib.types.enum [ "caddy" "neocities" ];
-                    default = "caddy";
-                    description = "Hosting service to use (caddy or neocities)";
-                  };
-                  builder = lib.mkOption {
-                    type = lib.types.enum [ "nix" "jekyll" ];
-                    default = "nix";
-                    description = "Builder to use (nix or jekyll)";
-                  };
-                  apiKey = lib.mkOption {
-                    type = lib.types.nullOr lib.types.str;
-                    default = null;
-                    description =
-                      "API key for the hosting service (if required)";
-                  };
-                };
-              });
+                }
+              );
               default = { };
               description = "Static sites configuration";
             };
@@ -190,7 +199,9 @@
               enable = true;
               settings = {
                 ui.DEFAULT_THEME = "forgejo-dark";
-                DEFAULT = { APP_NAME = "git.${cfg.baseDomain}"; };
+                DEFAULT = {
+                  APP_NAME = "git.${cfg.baseDomain}";
+                };
                 server = {
                   DOMAIN = "git.${cfg.baseDomain}";
                   ROOT_URL = "https://git.${cfg.baseDomain}/";
@@ -221,13 +232,15 @@
                   scriptArgs = "%i"; # Pass the service name as an argument
                   # Send notification via ntfy.sh when a service fails
                   script = ''
+                    NTFY_URL=$(cat /run/secrets/ntfy_url)
                     ${pkgs.curl}/bin/curl \
-                                        --fail \
-                                        --show-error --silent \
-                                        --max-time 10 \
-                                        --retry 3 \
-                                        --data "${config.networking.hostName} service '$1' exited with errors" \
-                                        ${cfg.ntfyAddress}'';
+                      --fail \
+                      --show-error --silent \
+                      --max-time 10 \
+                      --retry 3 \
+                      --data "${config.networking.hostName} service '$1' exited with errors" \
+                      "$NTFY_URL"
+                  '';
                 };
 
                 # Test service that always fails (for testing)
@@ -271,36 +284,40 @@
         modules = [
           site-builder.nixosModules.default
           self.nixosModules.default
-          ({ modulesPath, ... }: {
-            imports = [
-              # This imports a basic virtual machine configuration
-              (modulesPath + "/virtualisation/qemu-vm.nix")
-            ];
+          (
+            { modulesPath, ... }:
+            {
+              imports = [
+                # This imports a basic virtual machine configuration
+                (modulesPath + "/virtualisation/qemu-vm.nix")
+              ];
 
-            fileSystems."/" = {
-              device = "test";
-              fsType = "ext4";
-            };
+              fileSystems."/" = {
+                device = "test";
+                fsType = "ext4";
+              };
 
-            services.chobble-server = {
-              enable = true;
-              baseDomain = "example.com";
-              ntfyAddress = "your_ntfy_address";
-              myAddress = "127.0.0.1";
-              sites = {
-                "example.com" = {
-                  gitRepo = "http://localhost:3000/example/site";
-                  wwwRedirect = true;
-                };
-                "example.neocities.org" = {
-                  gitRepo = "https://example.com/organisation/site";
-                  wwwRedirect = false;
-                  host = "neocities";
-                  apiKey = "aaaaaaaaaaaaaa";
+              services.chobble-server = {
+                enable = true;
+                baseDomain = "example.com";
+                myAddress = "127.0.0.1";
+                sites = {
+                  "example.com" = {
+                    gitRepo = "http://localhost:3000/example/site";
+                    builder = "nix";
+                    wwwRedirect = true;
+                  };
+                  "example.neocities.org" = {
+                    gitRepo = "https://example.com/organisation/site";
+                    builder = "nix";
+                    wwwRedirect = false;
+                    host = "neocities";
+                    apiKey = "aaaaaaaaaaaaaa";
+                  };
                 };
               };
-            };
-          })
+            }
+          )
         ];
       };
     };

@@ -29,7 +29,6 @@ Basic config example:
   services.chobble-server = {
     enable = true;
     baseDomain = "example.com";          # Your domain name
-    ntfyAddress = "ntfy.sh/your-topic";  # Where to send failure notifications
     myAddress = "1.2.3.4";               # Your IP (for SSH access)
 
     # Static sites to host
@@ -48,6 +47,7 @@ Basic config example:
 ```
 
 Options
+
 - **enable** - Enable the chobble-server configuration
 - **baseDomain** - Base domain for services (git will be hosted at git.basedomain)
 - **ntfyAddress** - ntfy.sh address for service failure notifications
