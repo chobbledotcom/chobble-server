@@ -9,17 +9,8 @@ let
   shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
   loggingConfig = domain: ''
     log {
-      output file /var/log/caddy/access-${domain}.log {
-        roll_size 100mb
-        roll_keep 1
-        roll_keep_for 24h
-      }
-      format transform `{request>remote_ip} - {request>user_id} [{ts}] "{request>method} {request>uri} {request>proto}" {status} {size} "{request>headers>Referer>[0]}" "{request>headers>User-Agent>[0]}"` {
-        time_format "02/Jan/2006:15:04:05 -0700"
-      }
+      output discard
     }
-    @uptime_kuma header_regexp User-Agent ^Uptime-Kuma
-    log_skip @uptime_kuma
   '';
 in
 {
