@@ -80,7 +80,7 @@ in
                     -format=combined \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
-                    /var/log/caddy/access-${domain}.log
+                    /var/log/caddy/${domain}.log
                 '';
               };
             };

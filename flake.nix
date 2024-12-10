@@ -199,6 +199,13 @@
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
                     reverse_proxy :3000
+                    log {
+                     output file /var/log/caddy/git.${cfg.baseDomain}.log {
+                       roll_size 100mb
+                       roll_keep 30
+                       roll_keep_for 24h
+                     }
+                    }
                   '';
                 };
               };
