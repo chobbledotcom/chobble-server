@@ -72,11 +72,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1733412085,
-        "narHash": "sha256-FillH0qdWDt/nlO6ED7h4cmN+G9uXwGjwmCnHs0QVYM=",
+        "lastModified": 1733550349,
+        "narHash": "sha256-NcGumB4Lr6KSDq+nIqXtNA8QwAQKDSZT7N9OTGWbTrs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4dc2fc4e62dbf62b84132fe526356fbac7b03541",
+        "rev": "e2605d0744c2417b09f8bf850dfca42fcf537d34",
         "type": "github"
       },
       "original": {
@@ -135,11 +135,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable"
       },
       "locked": {
-        "lastModified": 1733612063,
-        "narHash": "sha256-Wxt+RCc8SaUIbeFMVgBVGmFrUX8Gb5rhCX07dbjmjsk=",
+        "lastModified": 1733802401,
+        "narHash": "sha256-cwqDAnAsS7+AfFR84WI1YtmMYFU+urSfZ/bFxkJP3r4=",
         "ref": "refs/heads/main",
-        "rev": "f5206a6eff6768a356bafc3db2b2c1be04e15dc7",
-        "revCount": 64,
+        "rev": "df63de00a2c5397a41929da8ca75e3c238fa23c4",
+        "revCount": 65,
         "type": "git",
         "url": "https://git.chobble.com/chobble/nixos-site-builder"
       },

@@ -8,8 +8,8 @@
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
-    caddy.url = "github:vincentbernat/caddy-nix";
+    flake-utils.url = "github:numtide/flake-utils/11707dc2f618dd54ca8739b309ec4fc024de578b?narHash=sha256-l0KFg5HjrsfsO/JpG%2Br7fRrqm12kzFHyUHqHCVpMMbI%3D";
+    caddy.url = "github:vincentbernat/caddy-nix/9d13eb684b4ba1b2eb92e76f7ea1f517eccc4fe1?narHash=sha256-kUWyjeqkU%2BRHTHVXT61QF19eW2vnWgah5OcPrUlU8oU%3D";
   };
 
   outputs =
@@ -202,7 +202,10 @@
                   '';
                 };
               };
-              extraConfig = "";
+              globalConfig = ''
+                @uptime_kuma header_regexp User-Agent Uptime-Kuma
+                log_skip @uptime_kuma
+              '';
             };
 
             services.forgejo = {
