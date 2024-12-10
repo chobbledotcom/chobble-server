@@ -8,6 +8,8 @@
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
+    caddy.url = "github:vincentbernat/caddy-nix";
   };
 
   outputs =
@@ -15,10 +17,18 @@
       self,
       nixpkgs,
       site-builder,
+      flake-utils,
+      caddy,
     }:
     let
       lib = nixpkgs.lib;
       shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
+      caddyOverlay = final: prev: {
+        caddy = prev.caddy.withPlugins {
+          plugins = [ "github.com/caddyserver/transform-encoder" ];
+          hash = "sha256-F/jqR4iEsklJFycTjSaW8B/V3iTGqqGOzwYBUXxRKrc=";
+        };
+      };
     in
     {
       nixosModules.default =
@@ -284,6 +294,12 @@
         modules = [
           site-builder.nixosModules.default
           self.nixosModules.default
+          {
+            nixpkgs.overlays = [
+              caddy.overlays.default
+              caddyOverlay
+            ];
+          }
           (
             { modulesPath, ... }:
             {
