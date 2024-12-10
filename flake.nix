@@ -23,12 +23,12 @@
     let
       lib = nixpkgs.lib;
       shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
-      caddyOverlay = final: prev: {
-        caddy = prev.caddy.withPlugins {
+      customCaddy =
+        pkgs:
+        pkgs.caddy.withPlugins {
           plugins = [ "github.com/caddyserver/transform-encoder" ];
           hash = "sha256-F/jqR4iEsklJFycTjSaW8B/V3iTGqqGOzwYBUXxRKrc=";
         };
-      };
     in
     {
       nixosModules.default =
@@ -194,6 +194,7 @@
 
             services.caddy = {
               enable = true;
+              package = customCaddy pkgs;
               virtualHosts = {
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
@@ -295,10 +296,7 @@
           site-builder.nixosModules.default
           self.nixosModules.default
           {
-            nixpkgs.overlays = [
-              caddy.overlays.default
-              caddyOverlay
-            ];
+            nixpkgs.overlays = [ caddy.overlays.default ];
           }
           (
             { modulesPath, ... }:
