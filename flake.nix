@@ -203,8 +203,7 @@
                 };
               };
               globalConfig = ''
-                @uptime_kuma header_regexp User-Agent Uptime-Kuma
-                log_skip @uptime_kuma
+                log_skip header_regexp User-Agent Uptime-Kuma
               '';
             };
 
