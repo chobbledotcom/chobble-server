@@ -23,18 +23,17 @@
     let
       lib = nixpkgs.lib;
       shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
-      customCaddy =
-        pkgs:
-        pkgs.caddy.withPlugins {
-          plugins = [ "github.com/caddyserver/transform-encoder" ];
-          hash = "sha256-F/jqR4iEsklJFycTjSaW8B/V3iTGqqGOzwYBUXxRKrc=";
-        };
     in
     {
       nixosModules.default =
         { config, pkgs, ... }:
         let
           cfg = config.services.chobble-server;
+
+          customCaddy = (pkgs.extend caddy.overlays.default).caddy.withPlugins {
+            plugins = [ "github.com/caddyserver/transform-encoder/archive/refs/heads/master.zip" ];
+            hash = "0xhxlgfr1x1q0wjgc8hb9fjwb6ffjbk98ap3khwlj3fpq4sbpsfq";
+          };
 
           # These core services will always be monitored for failures
           baseServices = [
@@ -194,7 +193,7 @@
 
             services.caddy = {
               enable = true;
-              package = customCaddy pkgs;
+              package = customCaddy;
               virtualHosts = {
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
