@@ -2,7 +2,6 @@
   "nodes": {
     "caddy": {
       "locked": {
-        "lastModified": 1732948222,
         "narHash": "sha256-kUWyjeqkU+RHTHVXT61QF19eW2vnWgah5OcPrUlU8oU=",
         "owner": "vincentbernat",
         "repo": "caddy-nix",
@@ -10,8 +9,10 @@
         "type": "github"
       },
       "original": {
+        "narHash": "sha256-kUWyjeqkU+RHTHVXT61QF19eW2vnWgah5OcPrUlU8oU=",
         "owner": "vincentbernat",
         "repo": "caddy-nix",
+        "rev": "9d13eb684b4ba1b2eb92e76f7ea1f517eccc4fe1",
         "type": "github"
       }
     },
@@ -20,7 +21,6 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1731533236,
         "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
         "owner": "numtide",
         "repo": "flake-utils",
@@ -28,8 +28,10 @@
         "type": "github"
       },
       "original": {
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
         "owner": "numtide",
         "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       }
     },
