@@ -32,7 +32,7 @@
 
           customCaddy = (pkgs.extend caddy.overlays.default).caddy.withPlugins {
             plugins = [ "github.com/caddyserver/transform-encoder" ];
-            hash = "0xhxlgfr1x1q0wjgc8hb9fjwb6ffjbk98ap3khwlj3fpq4sbpsfq";
+            hash = "sha256-9kgxIpIwC5asZ0PV8P6LO8HHVa3udHMSNNI/zV3lmAM=";
           };
 
           # These core services will always be monitored for failures
