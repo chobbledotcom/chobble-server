@@ -202,9 +202,6 @@
                   '';
                 };
               };
-              globalConfig = ''
-                log_skip header_regexp User-Agent Uptime-Kuma
-              '';
             };
 
             services.forgejo = {
