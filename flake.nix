@@ -31,7 +31,7 @@
           cfg = config.services.chobble-server;
 
           customCaddy = (pkgs.extend caddy.overlays.default).caddy.withPlugins {
-            plugins = [ "github.com/caddyserver/transform-encoder/archive/refs/heads/master.zip" ];
+            plugins = [ "github.com/caddyserver/transform-encoder" ];
             hash = "0xhxlgfr1x1q0wjgc8hb9fjwb6ffjbk98ap3khwlj3fpq4sbpsfq";
           };
 
