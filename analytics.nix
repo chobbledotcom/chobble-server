@@ -7,11 +7,6 @@
 let
   cfg = config.services.chobble-server;
   shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
-  loggingConfig = _domain: ''
-    log {
-      output discard
-    }
-  '';
 in
 {
   options.services.chobble-server = {
@@ -51,7 +46,7 @@ in
         extraConfig = ''
           reverse_proxy :8081
         '';
-        logFormat = loggingConfig host;
+        logFormat = "output discard";
       }) cfg.analyticsHosts)
     ];
 
