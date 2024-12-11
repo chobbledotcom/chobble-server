@@ -2,6 +2,7 @@
   "nodes": {
     "caddy": {
       "locked": {
+        "lastModified": 1732948222,
         "narHash": "sha256-kUWyjeqkU+RHTHVXT61QF19eW2vnWgah5OcPrUlU8oU=",
         "owner": "vincentbernat",
         "repo": "caddy-nix",
@@ -35,43 +36,6 @@
         "type": "github"
       }
     },
-    "flake-utils_2": {
-      "inputs": {
-        "systems": "systems_2"
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "jekyll-builder": {
-      "inputs": {
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1733540202,
-        "narHash": "sha256-mer+odv2smWgxIAxiixDusr+HUnY7+mP3ebylW9Rjbg=",
-        "ref": "refs/heads/main",
-        "rev": "cb8b1cbb0b40c30a792332b95fc6638d8367e379",
-        "revCount": 4,
-        "type": "git",
-        "url": "https://git.chobble.com/chobble/nix-jekyll-builder"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.chobble.com/chobble/nix-jekyll-builder"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1733550349,
@@ -88,60 +52,26 @@
         "type": "github"
       }
     },
-    "nixpkgs-unstable": {
-      "locked": {
-        "lastModified": 1733392399,
-        "narHash": "sha256-kEsTJTUQfQFIJOcLYFt/RvNxIK653ZkTBIs4DG+cBns=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "d0797a04b81caeae77bcff10a9dde78bc17f5661",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1720535198,
-        "narHash": "sha256-zwVvxrdIzralnSbcpghA92tWu2DV2lwv89xZc8MTrbg=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "205fd4226592cc83fd4c0885a3e4c9c400efabb5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-23.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
-        "caddy": "caddy",
-        "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
         "site-builder": "site-builder"
       }
     },
     "site-builder": {
       "inputs": {
-        "jekyll-builder": "jekyll-builder",
+        "caddy": "caddy",
+        "flake-utils": "flake-utils",
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        ]
       },
       "locked": {
-        "lastModified": 1733802401,
-        "narHash": "sha256-cwqDAnAsS7+AfFR84WI1YtmMYFU+urSfZ/bFxkJP3r4=",
+        "lastModified": 1733880965,
+        "narHash": "sha256-Q/xRquq/qDvvk3J0DDqNirzopFBwoKhKs/vAKEnVctk=",
         "ref": "refs/heads/main",
-        "rev": "df63de00a2c5397a41929da8ca75e3c238fa23c4",
-        "revCount": 65,
+        "rev": "643ab8e4205a6acebfb3dd2e2eda847f583f8550",
+        "revCount": 75,
         "type": "git",
         "url": "https://git.chobble.com/chobble/nixos-site-builder"
       },
@@ -151,21 +81,6 @@
       }
     },
     "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

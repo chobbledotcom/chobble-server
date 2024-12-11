@@ -49,9 +49,9 @@ in
       (builtins.mapAttrs (host: _: {
         listenAddresses = [ "0.0.0.0" ];
         extraConfig = ''
-          ${loggingConfig host}
           reverse_proxy :8081
         '';
+        logFormat = loggingConfig host;
       }) cfg.analyticsHosts)
     ];
 
