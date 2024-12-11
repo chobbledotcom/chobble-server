@@ -7,7 +7,7 @@
 let
   cfg = config.services.chobble-server;
   shortHash = str: builtins.substring 0 8 (builtins.hashString "sha256" str);
-  loggingConfig = domain: ''
+  loggingConfig = _domain: ''
     log {
       output discard
     }
