@@ -123,6 +123,12 @@
                       default = "caddy";
                       description = "Hosting service to use (caddy or neocities)";
                     };
+                    subfolder = mkOption {
+                      type = types.nullOr types.str;
+                      default = null;
+                      description = "Subfolder within the repository to use as the site root";
+                      example = "public";
+                    };
                     builder = lib.mkOption {
                       type = lib.types.enum [
                         "nix"
