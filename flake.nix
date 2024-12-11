@@ -23,6 +23,7 @@
     {
       nixosModules.default =
         { config, pkgs, ... }:
+        with lib;
         let
           cfg = config.services.chobble-server;
 
@@ -74,71 +75,68 @@
           options.services.chobble-server = {
             enable = lib.mkEnableOption "Chobble server configuration";
 
-            baseDomain = lib.mkOption {
-              type = lib.types.str;
+            baseDomain = mkOption {
+              type = types.str;
               example = "chobble.com";
               description = "Base domain for services";
             };
-
-            hostname = lib.mkOption {
-              type = lib.types.str;
+            hostname = mkOption {
+              type = types.str;
               default = "chobble";
               description = "Server hostname";
             };
-
-            myAddress = lib.mkOption {
-              type = lib.types.str;
+            myAddress = mkOption {
+              type = types.str;
               default = "127.0.0.1";
               description = "Your IP address (for the firewall)";
             };
-
-            sites = lib.mkOption {
-              type = lib.types.attrsOf (
-                lib.types.submodule {
+            sites = mkOption {
+              type = types.attrsOf (
+                types.submodule {
                   options = {
-                    gitRepo = lib.mkOption {
-                      type = lib.types.str;
+                    gitRepo = mkOption {
+                      type = types.str;
                       description = "Git repository URL";
                     };
-                    branch = lib.mkOption {
-                      type = lib.types.str;
+                    branch = mkOption {
+                      type = types.str;
                       default = "main";
                       description = "Git branch to track";
                     };
-                    wwwRedirect = lib.mkOption {
-                      type = lib.types.bool;
+                    wwwRedirect = mkOption {
+                      type = types.bool;
                       default = false;
                       description = "Whether to redirect www subdomain";
                     };
-                    useHTTPS = lib.mkOption {
-                      type = lib.types.bool;
+                    useHTTPS = mkOption {
+                      type = types.bool;
                       default = true;
                       description = "Whether to use HTTPS for this site";
                     };
-                    host = lib.mkOption {
-                      type = lib.types.enum [
+                    host = mkOption {
+                      type = types.enum [
                         "caddy"
                         "neocities"
                       ];
                       default = "caddy";
                       description = "Hosting service to use (caddy or neocities)";
                     };
-                    subfolder = lib.mkOption {
+                    subfolder = mkOption {
                       type = types.nullOr types.str;
                       default = null;
                       description = "Subfolder within the repository to use as the site root";
                       example = "public";
                     };
-                    builder = lib.mkOption {
-                      type = lib.types.enum [
+                    builder = mkOption {
+                      type = types.enum [
                         "nix"
                         "jekyll"
                       ];
                       default = "nix";
                       description = "Builder to use (nix or jekyll)";
                     };
-                    apiKey = lib.mkOption {
-                      type = lib.types.nullOr lib.types.str;
+                    apiKey = mkOption {
+                      type = types.nullOr types.str;
                       default = null;
                       description = "API key for the hosting service (if required)";
                     };
