@@ -72,7 +72,7 @@ in
                   ${pkgs.goatcounter}/bin/goatcounter \
                     import \
                     -follow \
-                    -format=combined \
+                    -format=common \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
                     /var/log/caddy/${domain}.log
