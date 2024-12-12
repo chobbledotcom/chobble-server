@@ -75,6 +75,8 @@ in
                     -format=common \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
+                    -exclude static \
+                    -exclude '!method:GET' \
                     /var/log/caddy/${domain}.log
                 '';
               };
