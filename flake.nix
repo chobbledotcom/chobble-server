@@ -3,7 +3,7 @@
   description = "Chobble server configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "nixpkgs";
     site-builder = {
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
       inputs.nixpkgs.follows = "nixpkgs";
