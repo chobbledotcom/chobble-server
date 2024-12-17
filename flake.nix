@@ -213,6 +213,10 @@
                 DEFAULT = {
                   APP_NAME = "git.${cfg.baseDomain}";
                 };
+                cors = {
+                  ENABLED = true;
+                  ALLOW_DOMAIN = "*.${cfg.baseDomain}";
+                };
                 server = {
                   DOMAIN = "git.${cfg.baseDomain}";
                   ROOT_URL = "https://git.${cfg.baseDomain}/";
