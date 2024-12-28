@@ -75,6 +75,8 @@ in
                     -format=combined \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
+                    -exclude 'path:glob:/assets/*' \
+                    -exclude 'path:glob:/robots.txt' \
                     /var/log/caddy/${domain}.log
                 '';
               };
