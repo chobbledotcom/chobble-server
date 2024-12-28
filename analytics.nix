@@ -72,12 +72,14 @@ in
                   ${pkgs.goatcounter}/bin/goatcounter \
                     import \
                     -follow \
-                    -format=combined \
+                    -format=common \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
                     -exclude 'path:glob:/assets/*' \
                     -exclude 'path:glob:/feed/*' \
                     -exclude 'path:glob:/robots.txt' \
+                    -exclude static \
+                    -exclude '!method:GET' \
                     /var/log/caddy/${domain}.log
                 '';
               };
