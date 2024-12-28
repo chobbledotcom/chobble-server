@@ -72,7 +72,7 @@ in
                   ${pkgs.goatcounter}/bin/goatcounter \
                     import \
                     -follow \
-                    -format=common \
+                    -format=combined \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
                     -exclude 'path:glob:/assets/*' \
