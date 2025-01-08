@@ -75,8 +75,8 @@ in
                     -format=combined \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
-                    -exclude 'path:glob:/assets/*' \
-                    -exclude 'path:glob:/feed/*' \
+                    -exclude 'path:glob:/assets/**' \
+                    -exclude 'path:glob:/feed/**' \
                     -exclude 'path:glob:/robots.txt' \
                     -exclude static \
                     -exclude '!method:GET' \
