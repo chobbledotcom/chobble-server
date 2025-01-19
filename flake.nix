@@ -210,7 +210,6 @@
               oci-containers = {
                 containers.anubis-git = {
                   image = "ghcr.io/xe/x/anubis:latest";
-                  ports = [ "127.0.0.1:3000:3000" ];
                   environment = {
                     DIFFICULTY = "3";
                     SERVE_ROBOTS_TXT = "true";
