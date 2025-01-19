@@ -242,7 +242,6 @@
                 };
                 service.DISABLE_REGISTRATION = true;
                 actions.ENABLED = false;
-                security.REVERSE_PROXY_TRUSTED_PROXIES = "*";
               };
             };
 
