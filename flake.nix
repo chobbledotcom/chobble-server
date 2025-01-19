@@ -192,7 +192,7 @@
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
-                    reverse_proxy :3000
+                    reverse_proxy :3020
                   '';
                   logFormat = ''
                     format transform "{common_log}"
@@ -202,6 +202,22 @@
                       roll_keep_for 24h
                     }
                   '';
+                };
+              };
+            };
+
+            virtualisation = {
+              oci-containers = {
+                containers.anubis-git = {
+                  image = "ghcr.io/xe/x/anubis:latest";
+                  ports = [ "127.0.0.1:3020:8923" ];
+                  environment = {
+                    SERVE_ROBOTS_TXT = "true";
+                    TARGET = "http://localhost:3000";
+                  };
+                  extraOptions = [
+                    "--pull=newer"
+                  ];
                 };
               };
             };
