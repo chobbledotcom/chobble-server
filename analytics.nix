@@ -78,6 +78,8 @@ in
                     -exclude 'path:glob:/assets/**' \
                     -exclude 'path:glob:/feed/**' \
                     -exclude 'path:glob:/robots.txt' \
+                    -exclude 'path:glob:/**.php' \
+                    -exclude 'path:glob:/**.env' \
                     -exclude static \
                     -exclude '!method:GET' \
                     /var/log/caddy/${domain}.log
