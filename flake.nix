@@ -192,7 +192,9 @@
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
-                    reverse_proxy :8923
+                    reverse_proxy :8923 {
+                      header_up X-Real-IP {remote_host}
+                    }
                   '';
                   logFormat = ''
                     format transform "{common_log}"
