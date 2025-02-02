@@ -6,7 +6,6 @@
     nixpkgs.url = "nixpkgs";
     site-builder = {
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
