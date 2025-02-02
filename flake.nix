@@ -4,7 +4,6 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
-    nixpkgs-unstable.url = "nixpkgs-unstable";
     site-builder = {
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
     };
@@ -14,7 +13,6 @@
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
       site-builder,
     }:
     let
