@@ -79,9 +79,9 @@ in
                     -exclude 'path:glob:/img/**' \
                     -exclude 'path:glob:/feed/**' \
                     -exclude 'path:glob:/robots.txt' \
-                    -exclude 'path:glob:/**.php' \
-                    -exclude 'path:glob:/**.avif' \
-                    -exclude 'path:glob:/**.env' \
+                    -exclude 'path:glob:/**/*.php' \
+                    -exclude 'path:glob:/**/*.avif' \
+                    -exclude 'path:glob:/**/*.env' \
                     -exclude static \
                     -exclude '!method:GET' \
                     /var/log/caddy/${domain}.log
