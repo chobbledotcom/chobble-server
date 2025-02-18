@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.services.redirects;
+  cfg = config.services.chobble-server;
 in
 {
-  options.services.redirects = {
+  options.services.chobble-server.redirects = {
     redirectHosts = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
