@@ -1,4 +1,3 @@
-# flake.nix
 {
   description = "Chobble server configuration";
 
@@ -192,7 +191,7 @@
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
-                    @commits `{path}.contains("/commit/") || {path}.contains("/commits/") || {path}.contains("/compare/") || {path}.contains("/blame/")`
+                    @commits `{path}.contains("/commit/") || {path}.contains("/commits/") || {path}.contains("/compare/") || {path}.contains("/blame/") || {path}.startsWith(".within.website")`
 
                     reverse_proxy @commits :8923 {
                       header_up X-Real-IP {remote_host}
