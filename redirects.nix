@@ -8,7 +8,7 @@ let
   cfg = config.services.chobble-server;
 in
 {
-  options.services.chobble-server.redirects = {
+  options.services.chobble-server = {
     redirectHosts = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
