@@ -192,20 +192,15 @@
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
-                     @commits <<CEL
-                      {path}.contains("/commit/")
-                      || {path}.contains("/commits/")
-                      || {path}.contains("/compare/")
-                      || {path}.contains("/blame/")
-                    	CEL
+                    @commits `{path}.contains("/commit/") || {path}.contains("/commits/") || {path}.contains("/compare/") || {path}.contains("/blame/")`
 
-                     reverse_proxy @commits :8923 {
-                       header_up X-Real-IP {remote_host}
-                     }
+                    reverse_proxy @commits :8923 {
+                      header_up X-Real-IP {remote_host}
+                    }
 
-                     reverse_proxy :3000 {
-                       header_up X-Real-IP {remote_host}
-                     }
+                    reverse_proxy :3000 {
+                      header_up X-Real-IP {remote_host}
+                    }
                   '';
                   logFormat = ''
                     format transform "{common_log}"
