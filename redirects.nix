@@ -23,7 +23,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.redirectHosts != { }) {
+  config = lib.mkIf cfg.enable {
     services.caddy.virtualHosts = lib.mkMerge [
       (lib.mapAttrs (domain: destination: {
         listenAddresses = [ "0.0.0.0" ];
