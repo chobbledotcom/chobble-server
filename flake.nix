@@ -193,10 +193,10 @@
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
                      @commits <<CEL
-                      	{path}.contains("/commit/")
-                      	|| {path}.contains("/commits/")
-                      	|| {path}.contains("/compare/")
-                      	|| {path}.contains("/blame/")
+                      {path}.contains("/commit/")
+                      || {path}.contains("/commits/")
+                      || {path}.contains("/compare/")
+                      || {path}.contains("/blame/")
                     	CEL
 
                      reverse_proxy @commits :8923 {
