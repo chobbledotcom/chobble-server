@@ -30,7 +30,7 @@ in
         extraConfig = ''
           redir ${destination} 301
         '';
-        logFormat = "discard";
+        logFormat = "output discard";
       }) cfg.redirectHosts)
     ];
   };
