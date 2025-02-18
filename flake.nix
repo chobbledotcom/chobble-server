@@ -69,7 +69,8 @@
         in
         {
           imports = [
-            ./analytics.nix # Import the analytics module here
+            ./analytics.nix
+            ./redirects.nix
           ];
 
           options.services.chobble-server = {
