@@ -72,9 +72,16 @@ in
                   ${pkgs.goatcounter}/bin/goatcounter \
                     import \
                     -follow \
-                    -format=common \
+                    -format=combined \
                     -site="https://${analyticsHost}" \
                     -exclude 'status:404' \
+                    -exclude 'path:glob:/assets/**' \
+                    -exclude 'path:glob:/img/**' \
+                    -exclude 'path:glob:/feed/**' \
+                    -exclude 'path:glob:/robots.txt' \
+                    -exclude 'path:glob:/**/*.php' \
+                    -exclude 'path:glob:/**/*.avif' \
+                    -exclude 'path:glob:/**/*.env' \
                     -exclude static \
                     -exclude '!method:GET' \
                     /var/log/caddy/${domain}.log

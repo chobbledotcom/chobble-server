@@ -3,10 +3,9 @@
   description = "Chobble server configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "nixpkgs";
     site-builder = {
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -193,7 +192,9 @@
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
-                    reverse_proxy :3000
+                    reverse_proxy :8923 {
+                      header_up X-Real-IP {remote_host}
+                    }
                   '';
                   logFormat = ''
                     format transform "{common_log}"
@@ -207,12 +208,33 @@
               };
             };
 
+            virtualisation = {
+              oci-containers = {
+                containers.anubis-git = {
+                  image = "ghcr.io/xe/x/anubis:latest";
+                  environment = {
+                    DIFFICULTY = "3";
+                    SERVE_ROBOTS_TXT = "true";
+                    TARGET = "http://localhost:3000";
+                  };
+                  extraOptions = [
+                    "--pull=newer"
+                    "--network=host"
+                  ];
+                };
+              };
+            };
+
             services.forgejo = {
               enable = true;
               settings = {
                 ui.DEFAULT_THEME = "forgejo-dark";
                 DEFAULT = {
                   APP_NAME = "git.${cfg.baseDomain}";
+                };
+                cors = {
+                  ENABLED = true;
+                  ALLOW_DOMAIN = "*.${cfg.baseDomain}";
                 };
                 server = {
                   DOMAIN = "git.${cfg.baseDomain}";
