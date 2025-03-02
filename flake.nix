@@ -248,7 +248,10 @@
                   HTTP_PORT = 3000;
                 };
                 service.DISABLE_REGISTRATION = true;
-                actions.ENABLED = false;
+                actions = {
+                  ENABLED = true;
+                  DEFAULT_ACTIONS_URL = "github";
+                };
               };
             };
 
