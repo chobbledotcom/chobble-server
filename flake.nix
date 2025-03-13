@@ -202,7 +202,6 @@
                     }
                   '';
                   logFormat = ''
-                    format transform "{common_log}"
                     output file /var/log/caddy/git.${cfg.baseDomain}.log {
                       roll_size 100mb
                       roll_keep 7
