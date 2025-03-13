@@ -231,6 +231,7 @@
 
             services.forgejo = {
               enable = true;
+              package = pkgs.forgejo;
               settings = {
                 ui.DEFAULT_THEME = "forgejo-dark";
                 DEFAULT = {
