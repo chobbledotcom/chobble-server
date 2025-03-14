@@ -261,7 +261,7 @@
             };
 
             services.site-builder = {
-              enable = true;
+              enable = builtins.length (builtins.attrNames cfg.sites) > 0;
               inherit (cfg) sites;
             };
 
