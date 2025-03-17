@@ -195,6 +195,7 @@
 
                     reverse_proxy @commits :8923 {
                       header_up X-Real-IP {remote_host}
+                      header_down "X-Robots-Tag" "noindex, nofollow"
                     }
 
                     reverse_proxy :3000 {
