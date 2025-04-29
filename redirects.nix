@@ -28,7 +28,7 @@ in
       (lib.mapAttrs (domain: destination: {
         listenAddresses = [ "0.0.0.0" ];
         extraConfig = ''
-          redir ${destination} 301
+          redir ${destination}{uri} 301
         '';
         logFormat = "output discard";
       }) cfg.redirectHosts)

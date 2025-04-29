@@ -1,4 +1,3 @@
-# flake.nix
 {
   description = "Chobble server configuration";
 
@@ -192,12 +191,18 @@
                 "git.${cfg.baseDomain}" = {
                   listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
-                    reverse_proxy :8923 {
+                    @commits `{path}.contains("/commit/") || {path}.contains("/commits/") || {path}.contains("/compare/") || {path}.contains("/blame/") || {path}.startsWith("/.within.website")`
+
+                    reverse_proxy @commits :8923 {
+                      header_up X-Real-IP {remote_host}
+                      header_down "X-Robots-Tag" "noindex, nofollow"
+                    }
+
+                    reverse_proxy :3000 {
                       header_up X-Real-IP {remote_host}
                     }
                   '';
                   logFormat = ''
-                    format transform "{common_log}"
                     output file /var/log/caddy/git.${cfg.baseDomain}.log {
                       roll_size 100mb
                       roll_keep 7
@@ -223,6 +228,7 @@
 
             services.forgejo = {
               enable = true;
+              package = pkgs.forgejo;
               settings = {
                 ui.DEFAULT_THEME = "forgejo-dark";
                 DEFAULT = {
@@ -239,7 +245,10 @@
                   HTTP_PORT = 3000;
                 };
                 service.DISABLE_REGISTRATION = true;
-                actions.ENABLED = false;
+                actions = {
+                  ENABLED = true;
+                  DEFAULT_ACTIONS_URL = "github";
+                };
               };
             };
 
@@ -249,7 +258,7 @@
             };
 
             services.site-builder = {
-              enable = true;
+              enable = builtins.length (builtins.attrNames cfg.sites) > 0;
               inherit (cfg) sites;
             };
 
