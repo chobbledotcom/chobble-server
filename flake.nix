@@ -208,21 +208,17 @@
               };
             };
 
-            virtualisation = {
-              oci-containers = {
-                containers.anubis-git = {
-                  image = "ghcr.io/xe/x/anubis:latest";
-                  environment = {
-                    DIFFICULTY = "3";
-                    SERVE_ROBOTS_TXT = "true";
-                    TARGET = "http://localhost:3000";
-                  };
-                  extraOptions = [
-                    "--pull=newer"
-                    "--network=host"
-                  ];
-                };
+            virtualisation.oci-containers.containers.anubis-git = {
+              image = "ghcr.io/xe/x/anubis:latest";
+              environment = {
+                DIFFICULTY = "3";
+                SERVE_ROBOTS_TXT = "true";
+                TARGET = "http://localhost:3000";
               };
+              extraOptions = [
+                "--pull=newer"
+                "--network=host"
+              ];
             };
 
             services.forgejo = {
