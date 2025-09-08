@@ -25,10 +25,15 @@ in
 
   config = lib.mkIf cfg.enable {
     services.caddy.virtualHosts = lib.mkMerge [
-      (lib.mapAttrs (domain: destination: {
+      (lib.mapAttrs (domain: destination: let
+        # Check if destination already has a path after the domain
+        url = builtins.match "([^/]+//[^/]+)(/.+)?" destination;
+        hasPath = url != null && builtins.elemAt url 1 != null;
+        redirectTarget = if hasPath then destination else "${destination}{uri}";
+      in {
         listenAddresses = [ "0.0.0.0" ];
         extraConfig = ''
-          redir ${destination}{uri} 301
+          redir ${redirectTarget} 301
         '';
         logFormat = "output discard";
       }) cfg.redirectHosts)
