@@ -84,11 +84,6 @@
               default = "chobble";
               description = "Server hostname";
             };
-            myAddress = mkOption {
-              type = types.str;
-              default = "127.0.0.1";
-              description = "Your IP address (for the firewall)";
-            };
             sites = mkOption {
               type = types.attrsOf (
                 types.submodule {
@@ -155,33 +150,10 @@
 
                 # Open ports for web traffic
                 allowedTCPPorts = [
+                  22 # SSH
                   80 # HTTP
                   443 # HTTPS
                 ];
-
-                # Custom iptables rules to restrict SSH access to specific IP
-                extraCommands = ''
-                  # First, block all SSH connections by default
-                  iptables -A INPUT -p tcp --dport 22 -j DROP
-
-                  # Then, allow SSH only from this specific IP address
-                  iptables -I INPUT \
-                    -p tcp \
-                    --dport 22 \
-                    -s ${cfg.myAddress}/32 \
-                    -j ACCEPT
-                '';
-
-                # Remove our custom rules when the firewall stops
-                # The '|| true' ensures the script doesn't fail if rules don't exist
-                extraStopCommands = ''
-                  iptables -D INPUT -p tcp --dport 22 -j DROP || true
-                  iptables -D INPUT \
-                    -p tcp \
-                    --dport 22 \
-                    -s ${cfg.myAddress}/32 \
-                    -j ACCEPT || true
-                '';
               };
             };
 
@@ -342,7 +314,6 @@
               services.chobble-server = {
                 enable = true;
                 baseDomain = "example.com";
-                myAddress = "127.0.0.1";
                 sites = {
                   "example.com" = {
                     gitRepo = "http://localhost:3000/example/site";
