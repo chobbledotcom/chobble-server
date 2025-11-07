@@ -22,12 +22,25 @@ in
 
   config = lib.mkIf cfg.enable {
     services.caddy.virtualHosts = lib.mkMerge [
-      (lib.genAttrs cfg.analyticsHosts (host: {
-        extraConfig = ''
-          reverse_proxy :8081
-        '';
-        logFormat = "output discard";
-      }))
+      (lib.concatMapAttrs (
+        _: host:
+        {
+          # HTTP version - redirect to HTTPS
+          "http://${host}" = {
+            extraConfig = ''
+              redir https://${host}{uri} 301
+            '';
+            logFormat = "output discard";
+          };
+          # HTTPS version - serve the actual site
+          "https://${host}" = {
+            extraConfig = ''
+              reverse_proxy :8081
+            '';
+            logFormat = "output discard";
+          };
+        }
+      ) (lib.genAttrs cfg.analyticsHosts (host: host)))
     ];
 
   };
