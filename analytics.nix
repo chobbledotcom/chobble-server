@@ -23,7 +23,6 @@ in
   config = lib.mkIf cfg.enable {
     services.caddy.virtualHosts = lib.mkMerge [
       (lib.genAttrs cfg.analyticsHosts (host: {
-        listenAddresses = [ "0.0.0.0" ];
         extraConfig = ''
           reverse_proxy :8081
         '';

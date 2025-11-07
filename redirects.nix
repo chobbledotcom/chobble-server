@@ -25,29 +25,31 @@ in
 
   config = lib.mkIf cfg.enable {
     services.caddy.virtualHosts = lib.mkMerge [
-      (lib.concatMapAttrs (domain: destination: let
-        # Check if destination already has a path after the domain
-        url = builtins.match "([^/]+//[^/]+)(/.+)?" destination;
-        hasPath = url != null && builtins.elemAt url 1 != null;
-        redirectTarget = if hasPath then destination else "${destination}{uri}";
-      in {
-        # HTTP version of the domain
-        "http://${domain}" = {
-          listenAddresses = [ "0.0.0.0" ];
-          extraConfig = ''
-            redir ${redirectTarget} 301
-          '';
-          logFormat = "output discard";
-        };
-        # HTTPS version of the domain
-        "https://${domain}" = {
-          listenAddresses = [ "0.0.0.0" ];
-          extraConfig = ''
-            redir ${redirectTarget} 301
-          '';
-          logFormat = "output discard";
-        };
-      }) cfg.redirectHosts)
+      (lib.concatMapAttrs (
+        domain: destination:
+        let
+          # Check if destination already has a path after the domain
+          url = builtins.match "([^/]+//[^/]+)(/.+)?" destination;
+          hasPath = url != null && builtins.elemAt url 1 != null;
+          redirectTarget = if hasPath then destination else "${destination}{uri}";
+        in
+        {
+          # HTTP version of the domain
+          "http://${domain}" = {
+            extraConfig = ''
+              redir ${redirectTarget} 301
+            '';
+            logFormat = "output discard";
+          };
+          # HTTPS version of the domain
+          "https://${domain}" = {
+            extraConfig = ''
+              redir ${redirectTarget} 301
+            '';
+            logFormat = "output discard";
+          };
+        }
+      ) cfg.redirectHosts)
     ];
   };
 }

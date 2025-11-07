@@ -161,7 +161,6 @@
               enable = true;
               virtualHosts = {
                 "git.${cfg.baseDomain}" = {
-                  listenAddresses = [ "0.0.0.0" ];
                   extraConfig = ''
                     @commits `{path}.contains("/commit/") || {path}.contains("/commits/") || {path}.contains("/compare/") || {path}.contains("/blame/") || {path}.startsWith("/.within.website")`
 
