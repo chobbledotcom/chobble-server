@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
+    nixpkgs-25_05.url = "github:NixOS/nixpkgs/nixos-25.05";
     site-builder = {
       url = "git+https://git.chobble.com/chobble/nixos-site-builder";
     };
@@ -12,6 +13,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-25_05,
       site-builder,
     }:
     let
@@ -20,9 +22,10 @@
     in
     {
       nixosModules.default =
-        { config, pkgs, ... }:
+        { config, pkgs, lib, ... }:
         with lib;
         let
+          pkgs-25_05 = import nixpkgs-25_05 { inherit (pkgs) system; };
           cfg = config.services.chobble-server;
 
           # These core services will always be monitored for failures
@@ -226,6 +229,7 @@
             services.goatcounter = {
               enable = true;
               proxy = true;
+              package = pkgs-25_05.goatcounter;
             };
 
             services.site-builder = {
