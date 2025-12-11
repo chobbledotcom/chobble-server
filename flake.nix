@@ -22,7 +22,12 @@
     in
     {
       nixosModules.default =
-        { config, pkgs, lib, ... }:
+        {
+          config,
+          pkgs,
+          lib,
+          ...
+        }:
         with lib;
         let
           pkgs-25_05 = import nixpkgs-25_05 { inherit (pkgs) system; };
@@ -229,7 +234,10 @@
             services.goatcounter = {
               enable = true;
               proxy = true;
-              package = pkgs-25_05.goatcounter;
+              # package = pkgs-25_05.goatcounter;
+              extraArgs = [
+                "-automigrate"
+              ];
             };
 
             services.site-builder = {
